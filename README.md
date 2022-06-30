@@ -1,3 +1,4 @@
+![Title picture](./Images/fraudster.jpg)
 
 # Credit Card Fraud Detection
 
