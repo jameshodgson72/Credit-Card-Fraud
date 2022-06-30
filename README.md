@@ -116,7 +116,7 @@ Extra features were engineered into the data set to improve classifier performan
 - Feaures which utilise information from previous transactions to put the next in context.  For example, a running average of the last 5 transaction amounts which the current transaction amount can be compared to.  (See below code snippet).
 - Features indicating high-fraud-rate values in categorical variables, e.g. "high_fraud_hour" which is set to "1" if the transaction took place in an hour of the day with above average rate of fraud.
 
-![Code snippet engineered features](./Images/window_and_shift_features_code.JPG "Code snippet showing calculation of windowing and shifted features.")
+![Code snippet engineered features](./Images/window_and_shift_features_code.jpg "Code snippet showing calculation of windowing and shifted features.")
 
 ## Modelling
 
