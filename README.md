@@ -1,3 +1,4 @@
+
 # Credit Card Fraud Detection
 
 ## Motivation
@@ -83,7 +84,7 @@ A key stage of data preparation was to sub-sample the non-fraud transactions in 
 
 However, note that 99.88% of the transactions in the test set were non-fraud and so this represented the **"baseline"** against which model accuracy was assessed.
 
-**INSERT PIC OF DATA SPLIT**
+![Data split and sample picture](./Images/sub_sampling_the_data.png "Data split and sample")
 
 ## Exploratory Data Analysis (EDA)
 
@@ -91,7 +92,7 @@ The most important aspect of EDA was looking at how fraud varied accross the dis
 
 Here is an example.  This chart shows how fraud varies by hour of the day.  There is a greater chance of a transaction being fraudulent during the early hours of the morning or through the middle of the day.  Note how the left-hand scale starts at close to 100%.  That is because we are looking for relative differences in a very small proportion of transactions which are fraud.
 
-**INSERT FRAUD BY HOUR OF DAY**
+![Fraud by hour of day](./Images/fraud_by_hour.jpg "Fraud by hour of day")
 
 Other factors which make a transaction more likely to be fraudulent:-
 - If it takes place online
@@ -106,25 +107,65 @@ Other factors which make a transaction more likely to be fraudulent:-
 
 Data correlations were reviewed by reference to heat maps.  Here's a picture showing the heat map of the standard data features.  The bottom row of the heatmap is the target variable, "tx_is_fraud".  As well as seeing many of the correlations observed in the EDA, some colinearity in the data is also evident and consequently some of these variables are "tuned out" by the models.
 
-**INSERT HEATMAP OF CORRELATIONS IN STANDARD DATA**
+![Heatmap of standard features](./Images/std_data_heatmap.jpg "Heatmap of standard data features")
 
 ## Feature engineering
 
 Extra features were engineered into the data set to improve classifier performance.  These fell into 2 categories:
-- Feaures which utilise information from previous transactions to put the next in context.  For example, a running average of the last 5 transaction amounts which the current transaction amount can be compared to.
+- Feaures which utilise information from previous transactions to put the next in context.  For example, a running average of the last 5 transaction amounts which the current transaction amount can be compared to.  (See below code snippet).
 - Features indicating high-fraud-rate values in categorical variables, e.g. "high_fraud_hour" which is set to "1" if the transaction took place in an hour of the day with above average rate of fraud.
 
-** INCLUDE CODE SNIPPET HERE - engineered features **
+![Code snippet engineered features](./Images/window_and_shift_features_code.JPG "Code snippet showing calculation of windowing and shifted features.")
 
+## Modelling
 
+Modelling was carried out in 3 phases:-
+1) Building models which used just the "standard" features available in the data.
+2) Taking the best two models from the first phase and re-applying them with the data augmented with the extra features engineered into the data.
+3) Taking the best model from the second phase and adjusting the probabilistic threshold at which a transaction is flagged as fraud.  
+
+The third phase was carried out to achieve an accuracy score on par with the baseline and to see what implications this had on classifier performance.
+
+The models used were:-
+- Logistic Regression model with cross validation (5 splits).
+- Decision Tree classifier, using grid search and cross validation to optimise parameters.
+- Decision Tree with Bagging (using 80% of samples and features for each tree in the ensemble).
+- XGBoost classifier utilising AUROC applied to the test set to trigger early stopping.
+
+## Results
+
+![Results table](./Images/results.png "Results of diferent models")
+
+Phase 1 (models using "standard" features showed that the Decision Tree with Bagging and XGBoost models produced significantly better results than the other 2 models.  There was little to choose between the best 2.  XGBoost captured more of the fraud cases (better recall), but flagged slightly more of the non-fraud cases as fraud (more false positives).  XGBoost in fact returned a perfect score on the training set.
+
+Phase 2 demonstrated that the extra features engineered into the training set were worthwhile, improving recall and reducing false positives.  A look at feature importances of the top 10 features used in the XGBoost model for this phase shows the extra features appearing too (high_fraud_mcc, high_fraud_hour, tx_zip_change).  Note also that features found here match up nicely with the results of the EDA.
+
+![XGBoost feature importances](./Images/xgb_eng_features.jpg "Feature importances for XGBoost with engineered features")
+
+At this point, the best recall is an impressive 98.5%, however the best model is still generating about 3.5% of false positives.
+
+So onto phase 3 - shifting the probability threshold.  By increasing the threshold at which a transaction is flagged as fraud, we can reduce false positives, in turn increasing accuracy.  However, in the process the recall decreases.
+
+## Conclusions
+
+I have built a classifier to detect 98.5% of fraudulent transactions in my test data set.  My classifier does this at the expense of falsely flagging around 3.5% of all transactions as fraud.  I can reduce these false positives, but at the cost of reducing the detection rate (recall).
+
+In a real-world context, there is a business trade off to make.  Each fraud transaction costs ~\\$109.   There would also be a business cost for each false positive too.  Presumably for such transactions there would be a back-office check to do, or perhaps the customer would be contacted, etc.  Smart companies now use extra validation steps on "high risk" transactions, such asking the customer to approve the transaction on a smart-phone app, or entering a number sent in a text message.  This keeps the cost of such "false positives" to a minimum.
+
+Being able to adjust the probability threshold at which a transaction is called fraud enables the ideal trade-off point to be set.
+
+A final thought is that in cases like this where a high level of class imbalance exists, accuracy is not a great way of assessing model performance.  The model with the best recall score here has an accuracy of 96.5% which is still under the baseline of 99.88%.  However, it's still an incredibly useful model because it correctly detects 98.5% of the fraud cases and only generates 3.5% of false positives.  This is more valuable than, for example, a model which finds no fraud cases at all, but which would still have an accuracy of 99.88%.
 
 ## Limitations
 
-Simulated data
+The project was based on simulated (rather than "real") data.  Finding good quality data in this space can be an issue for obvious reasons.  Many of the freely available data sets are obfuscated and/or subjected to PCA.
 
-## Need to cover
-- Intro, contents, goals, hypothesis, tech & tools list
-- Process/approach - step by step - include code snippets.
-- Conclusions
-- Wins & challenges:  What went well?  What did I struggle with?
-- Key learnings:  What did you take away from the project?  How did it shape you as a Data Scientist?
+I worked with a subset of data due to the limited hardware I had available for the project.  I would like to use a larger data set, possibly moving into the cloud to do so.
+
+## Further work
+
+More engineered features could be built to improve the accuracy of the classifier.  Prior to doing that I would try to analyse the false-positives to see if any particular features or characteristics are driving mis-classification.  More work could also be done to improve the performance of the models used, and also to try other types of model (e.g. State-Vector Machine).
+
+## Key learnings/challenges
+
+The project was a great vehicle for cementing and extending the skills learnt on my Data Science boot camp course.  Dealing with class imbalance in my data set was a particular challenge, as was working with Pandas' windowing and shifting functions in an appropriate way with the data set.  I also learnt that XGBoost can be a potent model to use in similar circumstances.
