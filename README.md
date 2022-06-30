@@ -135,7 +135,7 @@ The models used were:-
 
 ## Results
 
-![Results table](./Images/results.png "Results of diferent models")
+<img src="./Images/results.png" alt="results table" title="Results of diferent models" width=700/>
 
 Phase 1 (models using "standard" features showed that the Decision Tree with Bagging and XGBoost models produced significantly better results than the other 2 models.  There was little to choose between the best 2.  XGBoost captured more of the fraud cases (better recall), but flagged slightly more of the non-fraud cases as fraud (more false positives).  XGBoost in fact returned a perfect score on the training set.
 
