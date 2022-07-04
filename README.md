@@ -10,7 +10,7 @@ This repository contains 4 notebooks:-
 - "Data merging and cleaning":  code for loading data from 3 files, cleaning and merging, ready for use through the rest of the project.
 - "EDA - Credit Card Fraud Prediction":  Exploratory data analysis.
 - "Models based on standard data":  Fraud predictor models based on the features contained in the data.
-- "Models baded on engineered features":  Fraud predictor models based on features contained in the data plus features added in this notebook.
+- "Models based on engineered features":  Fraud predictor models based on features contained in the data plus features added in this notebook.
 
 The repository also contains a Python code file, "jh_eda_classes.py" which includes a few standard EDA functions I have built into a class to save time by re-using them from project to project.
 
@@ -35,13 +35,13 @@ Credit card fraud impacts on consumers and credit-card companies.  For consumers
 
 ## Project aims
 
-The aim of this project was to build a predictor for credit card fraud, utilising the details of an individual transaction, along with the card and card-holder's specifics.  The predictor should therefore predict whether an individual transaction is fradulent (or not).
+The aim of this project was to build a predictor for credit card fraud, utilising the details of an individual transaction, along with the card and card-holder's specifics.  The predictor should therefore predict whether an individual transaction is fraudulent (or not).
 
 The secondary aim of the project was to use Exploratory Data Analysis to gain insights into the kinds of transactions, credit cards, or users which are more prone to fraud.
 
 ## Success measures
 
-Primarily I wanted to be able to assess the effectiveness of my classifier.  I therefore used typical classifier metrics, such as precision and recall, to compare results.  AUROC (area-under the receiver-operatoring characteristic graph) was also a useful measure and one which some models could be trained to maximise.
+Primarily I wanted to be able to assess the effectiveness of my classifier.  I therefore used typical classifier metrics, such as precision and recall, to compare results.  AUROC (area-under the receiver-operating characteristic graph) was also a useful measure and one which some models could be trained to maximise.
 
 Additionally I wanted to look at the performance of the classifier from a business-suitability perspective, i.e.:-
 - what proportion of the fraud cases in the data set did the classifier detect? (This is actually equivalent to recall).
@@ -63,7 +63,7 @@ The transactions contain almost 30,000 fraud cases (just over 0.1%).  As such th
 
 A subset (approximately one sixth) of the transaction data was used for this project due to the limited hardware available.  The data sub-set contained 5000 fraud transactions out of around 4.5M.  The complete data for 373 out of the 2000 card users was taken to achieve this.  So a complete transaction history for those 373 users was retained, maintaining the validity of any aggregating, relative or windowing functions applied to the data later on (see engineered features).
 
-Data cleanining work included:
+Data cleaning work included:
 - Filling null values in Zip codes and US states for online and overseas transactions.
 - Filling null values in an "error code" field which actually indicated there was no error.
 - Correctly encoding date and datetime fields.
@@ -89,7 +89,7 @@ However, note that 99.88% of the transactions in the test set were non-fraud and
 
 ## Exploratory Data Analysis (EDA)
 
-The most important aspect of EDA was looking at how fraud varied accross the distributions of each feature.  I formulated a consistent approach to doing this across categorical and continuous variables.  For both I created stacked bar charts.  For categoric variables each bar represented a category.  For continuous variables, the categories were formed by creating histogram bins.  The stacked bars were made up of the percentages of fraud and non-fraud transactions in that category/bin.  Over the top I plotted a line chart showig the number of samples in each category/bin so I could check by eye that any trend I could see was backed up by a statistically significant number of samples.
+The most important aspect of EDA was looking at how fraud varied across the distributions of each feature.  I formulated a consistent approach to doing this across categorical and continuous variables.  For both I created stacked bar charts.  For categoric variables each bar represented a category.  For continuous variables, the categories were formed by creating histogram bins.  The stacked bars were made up of the percentages of fraud and non-fraud transactions in that category/bin.  Over the top I plotted a line chart showing the number of samples in each category/bin so I could check by eye that any trend I could see was backed up by a statistically significant number of samples.
 
 Here is an example.  This chart shows how fraud varies by hour of the day.  There is a greater chance of a transaction being fraudulent during the early hours of the morning or through the middle of the day.  Note how the left-hand scale starts at close to 100%.  That is because we are looking for relative differences in a very small proportion of transactions which are fraud.
 
@@ -106,14 +106,14 @@ Other factors which make a transaction more likely to be fraudulent:-
 
 ### Data correlations
 
-Data correlations were reviewed by reference to heat maps.  Here's a picture showing the heat map of the standard data features.  The bottom row of the heatmap is the target variable, "tx_is_fraud".  As well as seeing many of the correlations observed in the EDA, some colinearity in the data is also evident and consequently some of these variables are "tuned out" by the models.
+Data correlations were reviewed by reference to heat maps.  Here's a picture showing the heat map of the standard data features.  The bottom row of the heatmap is the target variable, "tx_is_fraud".  As well as seeing many of the correlations observed in the EDA, some collinearity in the data is also evident and consequently some of these variables are "tuned out" by the models.
 
 ![Heatmap of standard features](./Images/std_data_heatmap.jpg "Heatmap of standard data features")
 
 ## Feature engineering
 
 Extra features were engineered into the data set to improve classifier performance.  These fell into 2 categories:
-- Feaures which utilise information from previous transactions to put the next in context.  For example, a running average of the last 5 transaction amounts which the current transaction amount can be compared to.  (See below code snippet).
+- Features which utilise information from previous transactions to put the next in context.  For example, a running average of the last 5 transaction amounts which the current transaction amount can be compared to.  (See below code snippet).
 - Features indicating high-fraud-rate values in categorical variables, e.g. "high_fraud_hour" which is set to "1" if the transaction took place in an hour of the day with above average rate of fraud.
 
 ![Code snippet engineered features](./Images/window_and_shift_features_code.jpg "Code snippet showing calculation of windowing and shifted features.")
@@ -139,9 +139,9 @@ The models used were:-
 
 Phase 1 (models using "standard" features showed that the Decision Tree with Bagging and XGBoost models produced significantly better results than the other 2 models.  There was little to choose between the best 2.  XGBoost captured more of the fraud cases (better recall), but flagged slightly more of the non-fraud cases as fraud (more false positives).  XGBoost in fact returned a perfect score on the training set.
 
-Phase 2 demonstrated that the extra features engineered into the training set were worthwhile, improving recall and reducing false positives.  A look at feature importances of the top 10 features used in the XGBoost model for this phase shows the extra features appearing too (high_fraud_mcc, high_fraud_hour, tx_zip_change).  Note also that features found here match up nicely with the results of the EDA.
+Phase 2 demonstrated that the extra features engineered into the training set were worthwhile, improving recall and reducing false positives.  A look at feature importance of the top 10 features used in the XGBoost model for this phase shows the extra features appearing too (high_fraud_mcc, high_fraud_hour, tx_zip_change).  Note also that features found here match up nicely with the results of the EDA.
 
-![XGBoost feature importances](./Images/xgb_eng_features.jpg "Feature importances for XGBoost with engineered features")
+![XGBoost feature importances](./Images/xgb_eng_features.jpg "Feature importance for XGBoost with engineered features")
 
 At this point, the best recall is an impressive 98.5%, however the best model is still generating about 3.5% of false positives.
 
