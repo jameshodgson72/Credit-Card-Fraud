@@ -31,7 +31,7 @@ The data files are not stored here due to their size, but the data set is availa
 
 Credit card fraud is when your credit card is stolen and used to make fraudulent purchases.  Increasingly such fraud takes place electronically, i.e. your card details or electronic "signature" are mined and then used without the card being physically stolen or presented at stores.  The fraudster can operate entirely remotely and use your card to pay for services or have goods delivered to pick-up points like Amazon lockers.
 
-Credit card fraud impacts on consumers and credit-card companies.  For consumers it can mean your card it stopped so you can't use it until its replaced.  For credit card companies, they may have to pay the cost of the fraudulent transactions and/or pay the cost of extra measures or back office processes needed to mitigate fraud.
+Credit card fraud impacts on consumers and credit-card companies.  For consumers it can mean your card is stopped so you can't use it until it's replaced.  For credit card companies, they may have to pay the cost of the fraudulent transactions and/or pay the cost of extra measures or back office processes needed to mitigate fraud.
 
 ## Project aims
 
@@ -44,8 +44,8 @@ The secondary aim of the project was to use Exploratory Data Analysis to gain in
 Primarily I wanted to be able to assess the effectiveness of my classifier.  I therefore used typical classifier metrics, such as precision and recall, to compare results.  AUROC (area-under the receiver-operating characteristic graph) was also a useful measure and one which some models could be trained to maximise.
 
 Additionally I wanted to look at the performance of the classifier from a business-suitability perspective, i.e.:-
-- what proportion of the fraud cases in the data set did the classifier detect? (This is actually equivalent to recall).
-- what proportion of non-fraud cases did the classifier incorrectly flag as fraud?
+- What proportion of the fraud cases in the data set did the classifier detect? (This is actually equivalent to recall).
+- What proportion of non-fraud cases did the classifier incorrectly flag as fraud?
 
 The former relates to the cost of undetected fraud, while the latter relates to the cost of any unnecessary intervention on non-fraudulent transactions. 
 
@@ -61,7 +61,7 @@ The transactions contain almost 30,000 fraud cases (just over 0.1%).  As such th
 
 ## Data preparation
 
-A subset (approximately one sixth) of the transaction data was used for this project due to the limited hardware available.  The data sub-set contained 5000 fraud transactions out of around 4.5M.  The complete data for 373 out of the 2000 card users was taken to achieve this.  So a complete transaction history for those 373 users was retained, maintaining the validity of any aggregating, relative or windowing functions applied to the data later on (see engineered features).
+A subset (approximately one sixth) of the transaction data was used for this project due to the limited hardware available.  The data subset contained 5000 fraud transactions out of around 4.5M.  The complete data for 373 out of the 2000 card users was taken to achieve this.  So a complete transaction history for those 373 users was retained, maintaining the validity of any aggregating, relative or windowing functions applied to the data later on (see engineered features).
 
 Data cleaning work included:
 - Filling null values in Zip codes and US states for online and overseas transactions.
@@ -69,7 +69,7 @@ Data cleaning work included:
 - Correctly encoding date and datetime fields.
 - Converting currency amounts into numeric fields.
 - Converting "Yes/No" flags to binary for modelling purposes.
-- Re-naming columns for clarity and easy of use.
+- Renaming columns for clarity and ease of use.
 
 The 3 data files containing user, card and transaction information were joined together using the user id and card number fields.
 
@@ -81,7 +81,7 @@ All data was scaled according to the standard distributions of each variable.
 
 ### Dealing with class imbalance
 
-A key stage of data preparation was to sub-sample the non-fraud transactions in the training data set to achieve a 50:50 class balance.
+A key stage of data preparation was to subsample the non-fraud transactions in the training data set to achieve a 50:50 class balance.
 
 However, note that 99.88% of the transactions in the test set were non-fraud and so this represented the **"baseline"** against which model accuracy was assessed.
 
@@ -89,7 +89,7 @@ However, note that 99.88% of the transactions in the test set were non-fraud and
 
 ## Exploratory Data Analysis (EDA)
 
-The most important aspect of EDA was looking at how fraud varied across the distributions of each feature.  I formulated a consistent approach to doing this across categorical and continuous variables.  For both I created stacked bar charts.  For categoric variables each bar represented a category.  For continuous variables, the categories were formed by creating histogram bins.  The stacked bars were made up of the percentages of fraud and non-fraud transactions in that category/bin.  Over the top I plotted a line chart showing the number of samples in each category/bin so I could check by eye that any trend I could see was backed up by a statistically significant number of samples.
+The most important aspect of EDA was looking at how fraud varied across the distributions of each feature.  I formulated a consistent approach to doing this across categorical and continuous variables.  For both I created stacked bar charts.  For categoric variables each bar matches to a category.  For continuous variables, the categories were formed by creating histogram bins.  The stacked bars were made up of the percentages of fraud and non-fraud transactions in that category/bin.  Over the top I plotted a line chart showing the number of samples in each category/bin so I could check by eye that any trend I could see was backed up by a statistically significant number of samples.
 
 Here is an example.  This chart shows how fraud varies by hour of the day.  There is a greater chance of a transaction being fraudulent during the early hours of the morning or through the middle of the day.  Note how the left-hand scale starts at close to 100%.  That is because we are looking for relative differences in a very small proportion of transactions which are fraud.
 
@@ -99,10 +99,10 @@ Other factors which make a transaction more likely to be fraudulent:-
 - If it takes place online
 - If it takes place abroad
 - If it relates to certain types of retailers, particularly those onboard cruise liners, and music shops.  (This information is contained in a field called "Merchant Category Code").
-- The value of the transaction - fraudulent transactions are bigger, averaging nearly \\$109 verses \\$44 for a non-fraud transaction.
+- The value of the transaction - fraudulent transactions are bigger, averaging nearly \\$109 versus \\$44 for a non-fraud transaction.
 - The age of the credit-card user - older users are more vulnerable.
 - The annual income of the credit-card user.  Those on lower income are more vulnerable.
-- The type of card.  Pre-paid debit cards are most vulnerable and the Discover brand is more vulnerable than Amex, Visa and Mastercard.
+- The type of card.  Prepaid debit cards are most vulnerable and the Discover brand is more vulnerable than Amex, Visa and Mastercard.
 
 ### Data correlations
 
@@ -151,7 +151,7 @@ So onto phase 3 - shifting the probability threshold.  By increasing the thresho
 
 I have built a classifier to detect 98.5% of fraudulent transactions in my test data set.  My classifier does this at the expense of falsely flagging around 3.5% of all transactions as fraud.  I can reduce these false positives, but at the cost of reducing the detection rate (recall).
 
-In a real-world context, there is a business trade off to make.  Each fraud transaction costs ~\\$109.   There would also be a business cost for each false positive too.  Presumably for such transactions there would be a back-office check to do, or perhaps the customer would be contacted, etc.  Smart companies now use extra validation steps on "high risk" transactions, such asking the customer to approve the transaction on a smart-phone app, or entering a number sent in a text message.  This keeps the cost of such "false positives" to a minimum.
+In a real-world context, there is a business trade off to make.  Each fraud transaction costs ~\\$109.   There would also be a business cost for each false positive too.  Presumably for such transactions there would be a back-office check to do, or perhaps the customer would be contacted, etc.  Smart companies now use extra validation steps on "high risk" transactions, such as asking the customer to approve the transaction on a smart-phone app, or entering a number sent in a text message.  This keeps the cost of such "false positives" to a minimum.
 
 Being able to adjust the probability threshold at which a transaction is called fraud enables the ideal trade-off point to be set.
 
