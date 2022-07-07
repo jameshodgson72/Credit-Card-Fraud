@@ -3,7 +3,7 @@
 # Credit Card Fraud Detection
 
 ## Motivation
-This project was completed as part of the General Assembly Data Science Immersive boot camp training course.  The topic of Credit Card Fraud Detection was selected because of a personal interest in fraud detection, particularly in the context of processing high-volume consumer transactions.
+This project was undertaken as part of the General Assembly Data Science Immersive boot camp training course.  I worked on it solo during evenings over the final few weeks of the course.  The topic of Credit Card Fraud Detection was selected because of a personal interest in fraud detection, particularly in the context of processing high-volume consumer transactions.
 
 ## Repository files
 This repository contains 4 notebooks:-
